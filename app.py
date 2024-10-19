@@ -19,7 +19,7 @@ def init_kaggle_api():
 
 # Function to load data from KaggleHub
 # Initialize KaggleHub and download dataset
-@st.cache_data
+@st.cache
 def load_data():
     # Download the dataset and specify the path
     path = kagglehub.dataset_download("rajatsurana979/most-streamed-spotify-songs-2023")
@@ -37,9 +37,6 @@ df = load_data()
 
 # Preprocess the data
 df.columns = [col.strip().replace(' ', '_').lower() for col in df.columns]
-
-# Debug: Print DataFrame columns
-st.write('DataFrame Columns:', df.columns.tolist())
 
 # Sidebar filters
 st.sidebar.title('Filters')
@@ -59,6 +56,13 @@ selected_artists = st.sidebar.multiselect('Select Artist(s)', options=all_artist
 # Filter DataFrame based on selected artists
 df_filtered = df[df[artist_column].str.contains('|'.join(selected_artists))]
 
+# Display Simple Metrics
+total_tracks = df.shape[0]
+total_artists = df[artist_column].nunique()
+max_streams = df['streams'].max()
+st.metric(label="Total Tracks", value=total_tracks)
+st.metric(label="Total Artists", value=total_artists)
+st.metric(label="Max Streams", value=f"{max_streams:,}")
 
 # Visualization 1: Top Tracks by Streams
 st.markdown('## Top Tracks by Streams')
@@ -80,7 +84,7 @@ st.plotly_chart(fig1, use_container_width=True)
 
 # Visualization 2: Number of Top Tracks per Artist
 st.markdown('## Number of Top Tracks per Artist')
-artist_list = df_filtered['artist(s)_name'].str.split(', ')
+artist_list = df_filtered[artist_column].str.split(', ')
 artists = artist_list.explode()
 artist_counts = artists.value_counts().reset_index()
 artist_counts.columns = ['artist_name', 'count']
@@ -107,7 +111,7 @@ if 'danceability' in df_filtered.columns and 'energy' in df_filtered.columns:
         y='energy',
         size='streams',
         color='track_name',
-        hover_data=['artist(s)_name'],
+        hover_data=[artist_column],
         title='Danceability vs Energy',
         labels={'danceability': 'Danceability', 'energy': 'Energy'},
         height=600
@@ -135,3 +139,7 @@ if numeric_cols:
     st.plotly_chart(fig4, use_container_width=True)
 else:
     st.warning('Not enough numeric data available for correlation heatmap.')
+
+# Footer
+st.markdown("---")
+st.markdown("Designed by: **Rashmi Shivaprakash**")
