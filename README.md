@@ -4,7 +4,7 @@
 The Spotify Top Streams 2023 Dashboard is an interactive web application built with Python using Streamlit. It analyzes and visualizes the top streamed tracks on Spotify for the year 2023. The dashboard provides insights into the most popular tracks and artists, along with detailed analysis based on streams, danceability, energy levels, and other musical attributes.
 
 Dashboard URL: [Live Dashboard](https://spotify-top-streamed-2023.streamlit.app)
-![Dashboard Screenshot](dashboard_image.png)
+![Dashboard Screenshot](dashboard.png)
 
 
 ## Features
