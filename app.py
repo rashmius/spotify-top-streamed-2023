@@ -38,15 +38,27 @@ df = load_data()
 # Preprocess the data
 df.columns = [col.strip().replace(' ', '_').lower() for col in df.columns]
 
+# Debug: Print DataFrame columns
+st.write('DataFrame Columns:', df.columns.tolist())
+
 # Sidebar filters
 st.sidebar.title('Filters')
 
+# Identify the correct artist column name
+artist_columns = [col for col in df.columns if 'artist' in col]
+if artist_columns:
+    artist_column = artist_columns[0]  # Use the first matching column
+else:
+    st.error("Artist column not found in the dataset.")
+    st.stop()
+
 # Artist filter
-all_artists = df['artist(s)'].str.split(', ').explode().unique()
+all_artists = df[artist_column].str.split(', ').explode().unique()
 selected_artists = st.sidebar.multiselect('Select Artist(s)', options=all_artists, default=all_artists)
 
 # Filter DataFrame based on selected artists
-df_filtered = df[df['artist(s)'].str.contains('|'.join(selected_artists))]
+df_filtered = df[df[artist_column].str.contains('|'.join(selected_artists))]
+
 
 # Visualization 1: Top Tracks by Streams
 st.markdown('## Top Tracks by Streams')
