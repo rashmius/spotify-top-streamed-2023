@@ -62,7 +62,6 @@ total_artists = df[artist_column].nunique()
 max_streams = df['streams'].max()
 st.metric(label="Total Tracks", value=total_tracks)
 st.metric(label="Total Artists", value=total_artists)
-st.metric(label="Max Streams", value=f"{max_streams:,}")
 
 # Visualization 1: Top Tracks by Streams
 st.markdown('## Top Tracks by Streams')
