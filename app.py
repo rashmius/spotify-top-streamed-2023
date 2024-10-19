@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import os
-from kaggle.api.kaggle_api_extended import KaggleApi
+import kagglehub
 
 # Set up the page configuration
 st.set_page_config(page_title='Spotify Top Streams 2023 Dashboard', layout='wide')
@@ -15,34 +15,26 @@ st.markdown('An interactive dashboard analyzing the top streamed tracks on Spoti
 def init_kaggle_api():
     os.environ['KAGGLE_USERNAME'] = st.secrets['KAGGLE_USERNAME']
     os.environ['KAGGLE_KEY'] = st.secrets['KAGGLE_KEY']
-    api = KaggleApi()
-    api.authenticate()
-    return api
 
-# Function to load data from Kaggle
+# Initialize KaggleHub
+def init_kagglehub():
+    client = kagglehub.Client()
+    return client
+
+# Function to load data from KaggleHub
 @st.cache_data
 def load_data():
-    api = init_kaggle_api()
+    client = init_kagglehub()
     # Dataset details
     dataset = 'rajatsurana979/most-streamed-spotify-songs-2023'
-    data_path = 'data'
     dataset_file = 'Data-Combined.csv'  # Using the combined dataset for more features
 
-    # Create data directory if it doesn't exist
-    if not os.path.exists(data_path):
-        os.makedirs(data_path)
-
-    # Check if the dataset is already downloaded
-    if not os.path.isfile(os.path.join(data_path, dataset_file)):
-        # Download the dataset
-        api.dataset_download_file(dataset, file_name=dataset_file, path=data_path)
-        # Unzip the downloaded file
-        import zipfile
-        with zipfile.ZipFile(os.path.join(data_path, dataset_file + '.zip'), 'r') as zip_ref:
-            zip_ref.extractall(data_path)
+    # Download and load the dataset using KaggleHub
+    dataset_dir = client.datasets.download(dataset)
+    data_file_path = os.path.join(dataset_dir, dataset_file)
 
     # Read the dataset
-    df = pd.read_csv(os.path.join(data_path, dataset_file), encoding='latin1')
+    df = pd.read_csv(data_file_path, encoding='latin1')
     return df
 
 # Load the data
