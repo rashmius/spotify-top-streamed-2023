@@ -54,7 +54,7 @@ else:
 
 # Artist filter
 all_artists = df[artist_column].str.split(', ').explode().unique()
-selected_artists = st.sidebar.multiselect('Select Artist(s)', options=all_artists)
+selected_artists = st.sidebar.multiselect('Select Artist(s)', options=all_artists, default=all_artists[0])
 
 # Filter DataFrame based on selected artists
 df_filtered = df[df[artist_column].str.contains('|'.join(selected_artists))]
@@ -80,7 +80,7 @@ st.plotly_chart(fig1, use_container_width=True)
 
 # Visualization 2: Number of Top Tracks per Artist
 st.markdown('## Number of Top Tracks per Artist')
-artist_list = df_filtered['artist(s)'].str.split(', ')
+artist_list = df_filtered['artist(s)_name'].str.split(', ')
 artists = artist_list.explode()
 artist_counts = artists.value_counts().reset_index()
 artist_counts.columns = ['artist_name', 'count']
@@ -107,7 +107,7 @@ if 'danceability' in df_filtered.columns and 'energy' in df_filtered.columns:
         y='energy',
         size='streams',
         color='track_name',
-        hover_data=['artist(s)'],
+        hover_data=['artist(s)_name'],
         title='Danceability vs Energy',
         labels={'danceability': 'Danceability', 'energy': 'Energy'},
         height=600
