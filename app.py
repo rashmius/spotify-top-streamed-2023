@@ -140,5 +140,5 @@ else:
     st.warning('Not enough numeric data available for correlation heatmap.')
 
 # Footer
-st.markdown("---")
-st.markdown("Designed by: **Rashmi Shivaprakash**")
+st.sidebar.markdown("---")
+st.sidebar.markdown("Designed by: **Rashmi Shivaprakash**")
