@@ -22,7 +22,7 @@ def init_kaggle_api():
 @st.cache_data
 def load_data():
     # Download the dataset and specify the path
-    path = kagglehub.dataset_download("rajatsurana979/most-streamed-spotify-songs-2023", path='spotify-2023')
+    path = kagglehub.dataset_download("rajatsurana979/most-streamed-spotify-songs-2023", path='spotify-2023.csv')
     
     # Dataset file
     dataset_file = 'spotify-2023.csv'
