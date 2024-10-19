@@ -16,27 +16,22 @@ def init_kaggle_api():
     os.environ['KAGGLE_USERNAME'] = st.secrets['KAGGLE_USERNAME']
     os.environ['KAGGLE_KEY'] = st.secrets['KAGGLE_KEY']
 
-# Initialize KaggleHub
-def init_kagglehub():
-    client = kagglehub.Client()
-    return client
 
 # Function to load data from KaggleHub
+# Initialize KaggleHub and download dataset
 @st.cache_data
 def load_data():
-    client = init_kagglehub()
-    # Dataset details
-    dataset = 'rajatsurana979/most-streamed-spotify-songs-2023'
-    dataset_file = 'Data-Combined.csv'  # Using the combined dataset for more features
-
-    # Download and load the dataset using KaggleHub
-    dataset_dir = client.datasets.download(dataset)
-    data_file_path = os.path.join(dataset_dir, dataset_file)
+    # Download the dataset and specify the path
+    path = kagglehub.dataset_download("rajatsurana979/most-streamed-spotify-songs-2023", path='spotify-2023')
+    
+    # Dataset file
+    dataset_file = 'spotify-2023.csv'
+    data_file_path = f'{path}/{dataset_file}'
 
     # Read the dataset
     df = pd.read_csv(data_file_path, encoding='latin1')
     return df
-
+    
 # Load the data
 df = load_data()
 
