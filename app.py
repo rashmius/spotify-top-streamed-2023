@@ -54,7 +54,7 @@ else:
 
 # Artist filter
 all_artists = df[artist_column].str.split(', ').explode().unique()
-selected_artists = st.sidebar.multiselect('Select Artist(s)', options=all_artists, default=all_artists)
+selected_artists = st.sidebar.multiselect('Select Artist(s)', options=all_artists)
 
 # Filter DataFrame based on selected artists
 df_filtered = df[df[artist_column].str.contains('|'.join(selected_artists))]
